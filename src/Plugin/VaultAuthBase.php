@@ -13,6 +13,11 @@ use Drupal\Component\Plugin\ConfigurablePluginInterface;
  */
 abstract class VaultAuthBase extends PluginBase implements VaultAuthInterface, ContainerFactoryPluginInterface, ConfigurablePluginInterface {
 
+  /**
+   * The config factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactory
+   */
   protected $configFactory;
 
   /**
@@ -24,8 +29,6 @@ abstract class VaultAuthBase extends PluginBase implements VaultAuthInterface, C
 
   /**
    * Gets the configFactory property.
-   *
-   * @return \Drupal\Core\Config\ConfigFactory
    */
   public function getConfigFactory() {
     return $this->configFactory;

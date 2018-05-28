@@ -4,7 +4,7 @@ namespace Drupal\vault;
 
 use Drupal\Core\Config\ConfigFactory;
 use VaultTransports\Guzzle6Transport;
-use Vault\Exceptions;
+use Vault\Exceptions\AuthenticationException;
 
 /**
  * Factory class for Vault client.
@@ -34,7 +34,7 @@ class VaultClientFactory {
     $authStrategy = static::loadAuthenticationStrategy($configFactory);
     $authenticated = $client->setAuthenticationStrategy($authStrategy)->authenticate();
     if (!$authenticated) {
-      throw new Exceptions\AuthenticationException("Failed to authenticate");
+      throw new AuthenticationException("Failed to authenticate");
     }
 
     return $client;
@@ -54,6 +54,15 @@ class VaultClientFactory {
     return $plugin->getAuthenticationStrategy();
   }
 
+  /**
+   * Load the desired vault plugin manager service.
+   *
+   * @param string $plugin_type
+   *   Type of plugin manager to load. One of "auth".
+   *
+   * @return mixed
+   *   The specified plugin manager.
+   */
   public static function loadPluginManager($plugin_type) {
     $service_id = sprintf('plugin.manager.vault_%s', $plugin_type);
     return \Drupal::service($service_id);

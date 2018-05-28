@@ -9,7 +9,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
 use Drupal\vault\Plugin\VaultPluginFormInterface;
 
-
 /**
  * Provides a config form for Encrypt KMS.
  */
@@ -58,7 +57,7 @@ class VaultConfigForm extends ConfigFormBase {
     $plugin_definitions = $type->getDefinitions();
     foreach ($plugin_definitions as $id => $info) {
       // Add each plugin to the options list.
-      $form['plugin_auth']['#options'][$id] = $this->t($info['label']);
+      $form['plugin_auth']['#options'][$id] = $info['label'];
 
       // Add per-strategy config for elements.
       $plugin = $type->createInstance($id, []);

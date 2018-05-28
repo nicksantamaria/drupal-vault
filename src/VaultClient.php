@@ -4,6 +4,9 @@ namespace Drupal\vault;
 
 use Vault\Client;
 
+/**
+ * Wrapper for \Vault\Client providing some helper methods.
+ */
 class VaultClient extends Client {
 
   public const API = 'v1';
@@ -11,10 +14,13 @@ class VaultClient extends Client {
   /**
    * Makes a LIST request against an endpoint.
    *
-   * @param string $path
-   * @param array  $data
+   * @param string $url
+   *   Request URL.
+   * @param array $options
+   *   Options to pass to request.
    *
    * @return \Vault\ResponseModels\Response
+   *   Response from vault server.
    *
    * @todo implement this in upstream class.
    */
@@ -25,10 +31,8 @@ class VaultClient extends Client {
   /**
    * Queries list of secret engine mounts on the configured vault instance.
    *
-   * @param string $url
-   * @param array  $options
-   *
    * @return \Vault\ResponseModels\Response
+   *   Response from vault server.
    */
   public function listMounts() {
     return $this->read('/sys/mounts')->getData();
@@ -38,12 +42,14 @@ class VaultClient extends Client {
    * Queries list of particular secret backends.
    *
    * @param array $engine_types
+   *   Array of secret engine types to list.
    *
    * @return array
+   *   Array of secret engine mounts.
    */
   public function listSecretEngineMounts(array $engine_types) {
     $data = $this->listMounts();
-    return array_filter($data, function($v) use($engine_types) {
+    return array_filter($data, function ($v) use ($engine_types) {
       return in_array($v['type'], $engine_types);
     });
   }
