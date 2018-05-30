@@ -140,6 +140,10 @@ workflows:
   main:
     jobs:
       - lint
+      - docs:
+          filters:
+            branches:
+              only: /([7-9].x-.*|docs-.*)/
   sync:
     jobs:
       - sync_drupalorg:
@@ -148,6 +152,3 @@ workflows:
               only: /.*/
             branches:
               only: /[7-9].x-.*/
-      - docs:
-          requires:
-            - sync_drupalorg
