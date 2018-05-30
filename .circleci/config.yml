@@ -46,7 +46,6 @@ jobs:
             git push origin ${GH_PAGES_BRANCH}
           working_directory: /tmp/vault.drupaldocs.com
 
-
   # Job performs code style / validation tasks.
   lint:
     docker:
@@ -139,8 +138,7 @@ workflows:
   version: 2
   main:
     jobs:
-      - docs
-#      - lint
+      - lint
 #      - test_84x
 #      - test_85x
 #      - test_86x
