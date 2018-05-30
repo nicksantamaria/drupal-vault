@@ -47,7 +47,7 @@ jobs:
             git config user.email "robot@drupaldocs.com"
             git commit -a -m "Updated docs @ ${CIRCLE_SHA1}"
             git push origin gh-pages
-          working_directory: ${GITBOOK_DST}
+          working_directory: /tmp/vault.drupaldocs.com
 
 
   # Job performs code style / validation tasks.
