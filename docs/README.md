@@ -39,4 +39,4 @@ The Drupal community has produced some excellent tooling to abstract [secret sto
 * The FOSS options are difficult to operate in a secure manner
 
 
-![HashiCorp Vault](/static/vault-logo.png)
+![HashiCorp Vault](/gitbook/images/vault-logo.png)
