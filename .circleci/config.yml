@@ -29,12 +29,13 @@ jobs:
       - run:
           name: Create gh-pages workspace
           command: |
-            git worktree add ${GITBOOK_DST} origin/gh-pages
+            git worktree add --checkout ${GITBOOK_DST} gh-pages
             find ${GITBOOK_DST}/* -maxdepth 0 ! -name CNAME -exec rm -rf "{}" \;
       - run:
           name: Compile gitbook static site
           command: |
-            make docs-build DOCS_SRC=${GITBOOK_SRC} DOCS_DST=${GITBOOK_DST}
+            make docs-build DOCS_SRC="${GITBOOK_SRC}"
+            cp -rf ${GITBOOK_SRC}/_book/* "${GITBOOK_DST}"
       - run:
           name: Commit and push compiled docs
           command: |
