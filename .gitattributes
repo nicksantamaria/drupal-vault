@@ -9,3 +9,4 @@ Makefile                  export-ignore
 README.md                 export-ignore
 tests                     export-ignore
 docs                      export-ignore
+demo                      export-ignore

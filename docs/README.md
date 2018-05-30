@@ -37,3 +37,6 @@ The Drupal community has produced some excellent tooling to abstract [secret sto
 
 * Most of the existing integrations are for commercial services
 * The FOSS options are difficult to operate in a secure manner
+
+
+![HashiCorp Vault](/static/vault-logo.png)

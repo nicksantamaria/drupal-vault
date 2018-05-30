@@ -1,7 +1,7 @@
 # Navigation
 
 * [Introduction](README.md)
-* [Quick Start]
+* [Quick Start](/intro/README.md)
 * [Setup]
 * [Developer Documentation](/dev/README.md)
   * [Authentication Strategy Plugins](/dev/auth-plugins.md)
@@ -9,4 +9,3 @@
   * [Lease Storage Plugin](/dev/lease-storage-plugins.md)
   
 
-![HashiCorp Vault](./static/vault-logo.png)
