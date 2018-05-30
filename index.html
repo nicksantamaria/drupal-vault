@@ -98,6 +98,90 @@
             
         </li>
     
+        <li class="chapter " data-level="1.2" >
+            
+                <span>
+            
+                    
+                    [Quick Start]
+            
+                </span>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" >
+            
+                <span>
+            
+                    
+                    [Setup]
+            
+                </span>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="dev/">
+            
+                <a href="dev/">
+            
+                    
+                    Developer Documentation
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="dev/auth-plugins.html">
+            
+                <a href="dev/auth-plugins.html">
+            
+                    
+                    Authentication Strategy Plugins
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="dev/secret-engines.html">
+            
+                <a href="dev/secret-engines.html">
+            
+                    
+                    Secret Engines
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="dev/lease-storage-plugins.html">
+            
+                <a href="dev/lease-storage-plugins.html">
+            
+                    
+                    Lease Storage Plugin
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
 
     
 
@@ -144,6 +228,14 @@
                                 <section class="normal markdown-section">
                                 
                                 <h1 id="hashicorp-vault-drupal-integration">HashiCorp Vault Drupal Integration</h1>
+<p>This site covers setup and developer docs for the following Drupal projects:</p>
+<ul>
+<li><a href="https://www.drupal.org/project/vault" target="_blank">drupal.org/project/vault</a></li>
+<li><a href="https://www.drupal.org/project/vault_key_kv" target="_blank">drupal.org/project/vault_key_kv</a></li>
+<li><a href="https://www.drupal.org/project/encrypt_vault_transit" target="_blank">drupal.org/project/encrypt_vault_transit</a></li>
+<li><a href="https://www.drupal.org/project/vault_key_aws" target="_blank">drupal.org/project/vault_key_aws</a></li>
+<li><a href="https://www.drupal.org/project/vault_auth_token" target="_blank">drupal.org/project/vault_auth_token</a></li>
+</ul>
 <h2 id="what-is-vault">What is Vault?</h2>
 <blockquote>
 <p>Vault is a tool for securely accessing secrets. A secret is anything that you want to tightly control access to, such as API keys, passwords, or certificates.</p>
@@ -154,6 +246,22 @@
 <li><a href="https://www.vaultproject.io/intro/use-cases.html" target="_blank">Common Use Cases</a></li>
 <li><a href="https://www.vaultproject.io/intro/getting-started/install.html" target="_blank">Getting Started</a></li>
 <li><a href="https://github.com/hashicorp/vault" target="_blank">GitHub</a></li>
+</ul>
+<h2 id="why-vault-with-drupal">Why Vault with Drupal?</h2>
+<p><strong>Unparalleled Feature-Set</strong></p>
+<p>Vault has a huge range of features. Just to name a few:</p>
+<ul>
+<li>Encrypted key/value storage</li>
+<li>Encryption-as-a-service</li>
+<li>Automatic rotation of credentials</li>
+<li>Revokation of credentials</li>
+<li>Audit logging for compliance and intrusion detection </li>
+</ul>
+<p><strong>Free and Open Source Software</strong></p>
+<p>The Drupal community has produced some excellent tooling to abstract <a href="https://www.drupal.org/project/key" target="_blank">secret storage</a> and <a href="https://www.drupal.org/project/encrypt" target="_blank">encryption</a>. However there are issues with the ecosystem of tools which leverage these abstractions to perform the cryptographic functions.</p>
+<ul>
+<li>Most of the existing integrations are for commercial services</li>
+<li>The <a href="GLOSSARY.html#foss" class="glossary-term" title="Free and Open Source Software">FOSS</a> options are difficult to operate in a secure manner</li>
 </ul>
 
                                 
@@ -190,7 +298,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"dir":"ltr"},"config":{"plugins":[],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"nicksanta","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Drupal Vault Integration","language":"en","gitbook":"*","description":"Documentation for HashiCorp Vault integration with Drupal"},"file":{"path":"README.md","mtime":"2018-05-30T13:16:07.986Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-05-30T13:16:11.916Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"next":{"title":"[Quick Start]","level":"1.2","depth":1,"ref":"","articles":[]},"dir":"ltr"},"config":{"plugins":[],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"nicksanta","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Drupal Vault Integration","language":"en","gitbook":"*","description":"Documentation for HashiCorp Vault integration with Drupal"},"file":{"path":"README.md","mtime":"2018-05-30T14:39:24.476Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-05-30T14:39:27.961Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>
