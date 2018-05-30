@@ -24,12 +24,13 @@ jobs:
     environment:
       GITBOOK_SRC: /data/docs
       GITBOOK_DST: /tmp/vault.drupaldocs.com
+      GH_PAGES_BRANCH: gh-pages
     steps:
       - checkout
       - run:
           name: Create gh-pages workspace
           command: |
-            git worktree add --checkout ${GITBOOK_DST} origin/gh-pages
+            git worktree add -B ${GH_PAGES_BRANCH} ${GITBOOK_DST} origin/${GH_PAGES_BRANCH}
             find ${GITBOOK_DST}/* -maxdepth 0 ! -name CNAME -exec rm -rf "{}" \;
       - run:
           name: Compile gitbook static site
@@ -42,11 +43,10 @@ jobs:
       - run:
           name: Commit and push compiled docs
           command: |
-            pwd
             git config user.name "Drupal Docs"
             git config user.email "robot@drupaldocs.com"
             git commit -a -m "Updated docs @ ${CIRCLE_SHA1}"
-            git push origin gh-pages
+            git push origin ${GH_PAGES_BRANCH}
           working_directory: /tmp/vault.drupaldocs.com
 
 
