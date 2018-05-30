@@ -38,12 +38,6 @@ jobs:
             make docs-build DOCS_SRC="${GITBOOK_SRC}"
             cp -rf ${GITBOOK_SRC}/_book/* "${GITBOOK_DST}"
       - run:
-          name: Removing read-only deploy key
-          command: ssh-add -D
-      - add_ssh_keys:
-          fingerprints:
-            - "cd:34:de:82:a9:9e:b5:06:fe:14:1f:6d:87:e9:bc:69"
-      - run:
           name: Commit and push compiled docs
           command: |
             git config user.name "Drupal Docs"
