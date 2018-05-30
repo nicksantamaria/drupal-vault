@@ -33,7 +33,8 @@ jobs:
             find ${GITBOOK_DST}/* -maxdepth 0 ! -name CNAME -exec rm -rf "{}" \;
       - run:
           name: Compile gitbook static site
-          command: make docs-build DOCS_SRC=${GITBOOK_SRC} DOCS_DST=${GITBOOK_DST}
+          command: |
+            make docs-build DOCS_SRC=${GITBOOK_SRC} DOCS_DST=${GITBOOK_DST}
       - run:
           name: Commit and push compiled docs
           command: |
@@ -136,6 +137,7 @@ workflows:
   version: 2
   main:
     jobs:
+      - docs
       - lint
       - test_84x
       - test_85x
