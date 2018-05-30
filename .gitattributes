@@ -8,3 +8,4 @@ Dockerfile                export-ignore
 Makefile                  export-ignore
 README.md                 export-ignore
 tests                     export-ignore
+docs                      export-ignore
