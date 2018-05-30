@@ -1,3 +1,3 @@
 # Developer Documentation
 
-{{ summary.parts[0].articles[0].title }}
+This section covers topics related to extending Drupal to support more of Vault's functionality.
