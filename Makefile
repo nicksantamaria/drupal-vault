@@ -1,18 +1,13 @@
 #!/usr/bin/make -f
 
-IMAGE_NAME=nicksantamaria/drupal_contrib_builder
-PROJECT_NAME=PROJECT_NAME
+GITBOOK=gitbook
+DOCS_SRC=docs
+DOCS_DST=./docs/_book
+docs-install:
+	$(GITBOOK) install "${DOCS_SRC}"
+docs-serve: docs-install
+	$(GITBOOK) serve "${DOCS_SRC}"
+docs-build: docs-install
+	$(GITBOOK) build "${DOCS_SRC}" "${DOCS_DST}"
 
-docker-build:
-	docker build -t ${IMAGE_NAME} .
-
-docker-push:
-	docker push ${IMAGE_NAME}
-
-find-replace:
-	find * -type f ! -name "Makefile" -exec sed -i "" "s/PROJECT_NAME/${PROJECT_NAME}/g" {} \;
-
-scaffold: find-replace
-	touch "${PROJECT_NAME}.info.yml"
-
-.PHONY: docker-build docker-push docker-push scaffold
+.PHONY: docs-install docs-serve docs-build
