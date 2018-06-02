@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * Contains main hooks for Vault module.
+ */
+
+/**
+ * Implements hook_cron().
+ */
+function vault_cron() {
+  $client = \Drupal::service("vault.vault_client");
+  // @todo make the increment request value configurable.
+  $client->renewAllLeases(3600);
+}

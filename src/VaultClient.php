@@ -3,6 +3,8 @@
 namespace Drupal\vault;
 
 use Vault\CachedClient;
+use Vault\Exceptions\ClientException;
+use Drupal\Component\Serialization\Json;
 
 /**
  * Wrapper for \Vault\Client providing some helper methods.
@@ -92,7 +94,6 @@ class VaultClient extends CachedClient {
     return $this->leaseStorage->getLease($storage_key);
   }
 
-
   /**
    * Revokes a lease.
    *
@@ -119,16 +120,54 @@ class VaultClient extends CachedClient {
    *  The storage key. Something like "key:key_machine_id".
    * @param int $increment
    *  The number of seconds to extend the release by.
+   *
+   * @return bool
+   *  TRUE if successful, FALSE if failed.
    */
-  public function renewLease($storage_key, $increment = 86400) {
+  public function renewLease($storage_key, $increment) {
+    $this->logger->debug(sprintf("attempting to renew lease for %s", $storage_key));
     $lease_id = $this->leaseStorage->getLeaseId($storage_key);
     try {
-      $response = $this->put("/sys/leases/renew", ["lease_id" => $lease_id, "increment" => $increment]);
-      $new_expires = \Drupal::time()->getRequestTime() + (int) $response->getLeaseDuration();
+      if (empty($lease_id)) {
+        throw new ClientException("no valid lease for " . $storage_key);
+      }
+
+      $data = [
+        "lease_id" => $lease_id,
+        "increment" => $increment
+      ];
+      $response = $this->put($this->buildPath("/sys/leases/renew"), ['json' => $data]);
+      if (is_null($response->getRequestId())) {
+        throw new ClientException("null response from server renewing lease for " . $storage_key);
+      }
+
+      $new_expires = $response->getLeaseDuration();
       $this->leaseStorage->updateLeaseExpires($storage_key, $new_expires);
     }
     catch (\Exception $e) {
       $this->logger->error(sprintf("Failed renewing lease %s", $lease_id));
+      return FALSE;
+    }
+
+    return TRUE;
+  }
+
+  /**
+   * Helper method to renew all existing leases.
+   *
+   * @param $increment int
+   *  Additional length to request leases for. Should be _at least_ the number
+   *  of seconds between cron runs.
+   */
+  public function renewAllLeases($increment) {
+    $leases = $this->leaseStorage->getAllLeases();
+    foreach ($leases as $key => $value) {
+      $response = $this->renewLease($key, $increment);
+      if (!$response) {
+        // Failed to renew the lease - remove it from state.
+        $this->logger->info(sprintf("revoking expired lease for %s", $key));
+        $this->revokeLease($key);
+      }
     }
   }
 
