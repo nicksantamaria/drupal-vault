@@ -12,6 +12,18 @@ class VaultClient extends CachedClient {
   public const API = 'v1';
 
   /**
+   * @var \Drupal\Vault\VaultLeaseStorage
+   */
+  protected $leaseStorage;
+
+  /**
+   * @param $leaseManager \Drupal\Vault\VaultLeaseStorage
+   */
+  public function setLeaseStorage($leaseStorage) {
+    $this->leaseStorage = $leaseStorage;
+  }
+
+  /**
    * Makes a LIST request against an endpoint.
    *
    * @param string $url

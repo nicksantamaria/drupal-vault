@@ -32,6 +32,7 @@ class VaultClientFactory {
     $client = new VaultClient($transport, $logger);
     $client->enableReadCache();
     $client->setCache(new ArrayCachePool());
+    $client->setLeaseStorage(new VaultLeaseStorage());
 
     // Load up auth strategy.
     try {
