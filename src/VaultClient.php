@@ -2,12 +2,12 @@
 
 namespace Drupal\vault;
 
-use Vault\Client;
+use Vault\CachedClient;
 
 /**
  * Wrapper for \Vault\Client providing some helper methods.
  */
-class VaultClient extends Client {
+class VaultClient extends CachedClient {
 
   public const API = 'v1';
 
