@@ -4,6 +4,12 @@ namespace Drupal\vault;
 
 class VaultLeaseStorage {
 
+  public const storageNamePrefix = "vault:lease";
+
+  public static function storageName($suffix) {
+    return sprintf("%s:%s", self::storageNamePrefix, $suffix);
+  }
+
   /**
    * @var \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface
    */
@@ -17,30 +23,57 @@ class VaultLeaseStorage {
   }
 
   /**
-   * @param $lease_id string
-   *  The lease ID.
+   * @param $storage_key string
+   *  The storage key. Something like "key:key_machine_id".
    *
    * @return mixed
    */
-  public function getLease($lease_id) {
-    return $this->storage->get($lease_id);
-  }
-
-  public function getAllLeases() {
-    return $this->storage->getAll();
+  public function getLease($storage_key) {
+    $item = $this->storage->get(self::storageName($storage_key));
+    return $item['data'];
   }
 
   /**
-   * @param $lease_id string
-   *  The lease ID.
+   * @return array
    */
-  public function deleteLease($lease_id) {
-    $this->storage->delete($lease_id);
+  public function getAllLeases() {
+    $items = $this->storage->getAll();
+    $returned = [];
+    foreach ($items as $key => $item) {
+      $returned[$key] = $item['data'];
+    }
+    return $returned;
+  }
+
+  /**
+   * Returns the lease ID for a given storage key.
+   *
+   * @param $storage_key string
+   *  The storage key. Something like "key:key_machine_id".
+   *
+   * @return string
+   *  The Vault lease ID.
+   */
+  public function getLeaseId($storage_key) {
+    $item = $this->storage->get(self::storageName($storage_key));
+    return $item['lease_id'];
+  }
+
+  /**
+   * Deletes a lease from storage.
+   *
+   * @param $storage_key string
+   *  The storage key. Something like "key:key_machine_id".
+   */
+  public function deleteLease($storage_key) {
+    $this->storage->delete(self::storageName($storage_key));
   }
 
   /**
    * Stores a new lease.
    *
+   * @param $storage_key string
+   *  The storage key. Something like "key:key_machine_id".
    * @param $lease_id string
    *  The lease ID.
    * @param $data
@@ -48,21 +81,25 @@ class VaultLeaseStorage {
    * @param $expires
    *  The lease expiry.
    */
-  public function setLease($lease_id, $data, $expires) {
-    $this->storage->setWithExpire($lease_id, $data, $expires);
+  public function setLease($storage_key, $lease_id, $data, $expires) {
+    $payload = [
+      'lease_id' => $lease_id,
+      'data' => $data,
+    ];
+    $this->storage->setWithExpire(self::storageName($storage_key), $payload, $expires);
   }
 
   /**
    * Updates the expiry of an existing lease.
    *
-   * @param $lease_id string
-   *  The lease ID.
+   * @param $storage_key string
+   *  The storage key. Something like "key:key_machine_id".
    * @param $expires
    *  The lease expiry.
    */
-  public function updateLeaseExpires($lease_id, $new_expires) {
-    $data = $this->getLease($lease_id);
-    $this->setLease($lease_id, $data, $new_expires);
+  public function updateLeaseExpires($storage_key, $new_expires) {
+    $data = $this->getLease(self::storageName($storage_key));
+    $this->setLease(self::storageName($storage_key), $data['lease_id'], $data['data'], $new_expires);
   }
 
 }

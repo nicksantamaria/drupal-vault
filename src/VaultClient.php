@@ -6,6 +6,9 @@ use Vault\CachedClient;
 
 /**
  * Wrapper for \Vault\Client providing some helper methods.
+ *
+ * It also acts as a translation layer between vault leases and drupal entities
+ * implementing leases (like keys).
  */
 class VaultClient extends CachedClient {
 
@@ -69,6 +72,8 @@ class VaultClient extends CachedClient {
   /**
    * Stores a lease.
    *
+   * @param $storage_key string
+   *  The storage key. Something like "key:key_machine_id".
    * @param $lease_id string
    *  The lease ID.
    * @param $data
@@ -76,14 +81,25 @@ class VaultClient extends CachedClient {
    * @param $expires
    *  The lease expiry.
    */
-  public function storeLease($lease_id, $data, $expires) {
-    $this->leaseStorage->setLease($lease_id, $data, $expires);
+  public function storeLease($storage_key, $lease_id, $data, $expires) {
+    $this->leaseStorage->setLease($storage_key, $lease_id, $data, $expires);
   }
 
   /**
-   * Revokes a lease.
+   * Retrieve a lease.
    */
-  public function revokeLease($lease_id) {
+  public function retrieveLease($storage_key) {
+    return $this->leaseStorage->getLease($storage_key);
+  }
+
+
+  /**
+   * Revokes a lease.
+   *
+   * @param $storage_key string
+   *  The storage key. Something like "key:key_machine_id".
+   */
+  public function revokeLease($storage_key) {
     // @todo make revoke request. Something like this:
 //    try {
 //      // @todo for some reason these tokens aren't being revoked. Get to the bottom of it.
@@ -96,11 +112,20 @@ class VaultClient extends CachedClient {
     $this->leaseStorage->deleteLease($lease_id);
   }
 
-  public function renewLease($lease_id, $increment = 86400) {
+  /**
+   * Renews a lease.
+   *
+   * @param $storage_key string
+   *  The storage key. Something like "key:key_machine_id".
+   * @param int $increment
+   *  The number of seconds to extend the release by.
+   */
+  public function renewLease($storage_key, $increment = 86400) {
+    $lease_id = $this->leaseStorage->getLeaseId($storage_key);
     try {
       $response = $this->put("/sys/leases/renew", ["lease_id" => $lease_id, "increment" => $increment]);
       $new_expires = \Drupal::time()->getRequestTime() + (int) $response->getLeaseDuration();
-      $this->leaseStorage->updateLeaseExpires($new_expires);
+      $this->leaseStorage->updateLeaseExpires($storage_key, $new_expires);
     }
     catch (\Exception $e) {
       $this->logger->error(sprintf("Failed renewing lease %s", $lease_id));
