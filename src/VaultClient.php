@@ -66,4 +66,45 @@ class VaultClient extends CachedClient {
     });
   }
 
+  /**
+   * Stores a lease.
+   *
+   * @param $lease_id string
+   *  The lease ID.
+   * @param $data
+   *  The lease data.
+   * @param $expires
+   *  The lease expiry.
+   */
+  public function storeLease($lease_id, $data, $expires) {
+    $this->leaseStorage->setLease($lease_id, $data, $expires);
+  }
+
+  /**
+   * Revokes a lease.
+   */
+  public function revokeLease($lease_id) {
+    // @todo make revoke request. Something like this:
+//    try {
+//      // @todo for some reason these tokens aren't being revoked. Get to the bottom of it.
+//      $path = '/sys/leases/revoke';
+//      $response = $this->client->put($path, ["lease_id" => $lease['lease_id']]);
+//    } catch (Exception $e) {
+//      $this->logger->critical('Unable to revoke lease on secret ' . $key->id());
+//    }
+    //$this->revoke()
+    $this->leaseStorage->deleteLease($lease_id);
+  }
+
+  public function renewLease($lease_id, $increment = 86400) {
+    try {
+      $response = $this->put("/sys/leases/renew", ["lease_id" => $lease_id, "increment" => $increment]);
+      $new_expires = \Drupal::time()->getRequestTime() + (int) $response->getLeaseDuration();
+      $this->leaseStorage->updateLeaseExpires($new_expires);
+    }
+    catch (\Exception $e) {
+      $this->logger->error(sprintf("Failed renewing lease %s", $lease_id));
+    }
+  }
+
 }

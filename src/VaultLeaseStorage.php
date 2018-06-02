@@ -39,6 +39,8 @@ class VaultLeaseStorage {
   }
 
   /**
+   * Stores a new lease.
+   *
    * @param $lease_id string
    *  The lease ID.
    * @param $data
@@ -48,6 +50,19 @@ class VaultLeaseStorage {
    */
   public function setLease($lease_id, $data, $expires) {
     $this->storage->setWithExpire($lease_id, $data, $expires);
+  }
+
+  /**
+   * Updates the expiry of an existing lease.
+   *
+   * @param $lease_id string
+   *  The lease ID.
+   * @param $expires
+   *  The lease expiry.
+   */
+  public function updateLeaseExpires($lease_id, $new_expires) {
+    $data = $this->getLease($lease_id);
+    $this->setLease($lease_id, $data, $new_expires);
   }
 
 }
