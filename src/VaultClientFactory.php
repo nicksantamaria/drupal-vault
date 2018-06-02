@@ -41,9 +41,8 @@ class VaultClientFactory {
         throw new AuthenticationException("Failed to authenticate");
       }
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       $logger->error(sprintf("[%s] %s", get_class($e), $e->getMessage()));
-      throw $e;
     }
 
     return $client;
