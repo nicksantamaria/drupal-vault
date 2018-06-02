@@ -4,12 +4,6 @@ namespace Drupal\vault;
 
 class VaultLeaseStorage {
 
-  public const storageNamePrefix = "vault:lease";
-
-  public static function storageName($suffix) {
-    return sprintf("%s:%s", self::storageNamePrefix, $suffix);
-  }
-
   /**
    * @var \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface
    */
@@ -29,7 +23,7 @@ class VaultLeaseStorage {
    * @return mixed
    */
   public function getLease($storage_key) {
-    $item = $this->storage->get(self::storageName($storage_key));
+    $item = $this->storage->get($storage_key);
     return $item['data'];
   }
 
@@ -55,7 +49,10 @@ class VaultLeaseStorage {
    *  The Vault lease ID.
    */
   public function getLeaseId($storage_key) {
-    $item = $this->storage->get(self::storageName($storage_key));
+    $item = $this->storage->get($storage_key);
+    if (empty($item)) {
+      return FALSE;
+    }
     return $item['lease_id'];
   }
 
@@ -66,7 +63,7 @@ class VaultLeaseStorage {
    *  The storage key. Something like "key:key_machine_id".
    */
   public function deleteLease($storage_key) {
-    $this->storage->delete(self::storageName($storage_key));
+    $this->storage->delete($storage_key);
   }
 
   /**
@@ -86,7 +83,7 @@ class VaultLeaseStorage {
       'lease_id' => $lease_id,
       'data' => $data,
     ];
-    $this->storage->setWithExpire(self::storageName($storage_key), $payload, $expires);
+    $this->storage->setWithExpire($storage_key, $payload, $expires);
   }
 
   /**
@@ -98,8 +95,8 @@ class VaultLeaseStorage {
    *  The lease expiry.
    */
   public function updateLeaseExpires($storage_key, $new_expires) {
-    $data = $this->getLease(self::storageName($storage_key));
-    $this->setLease(self::storageName($storage_key), $data['lease_id'], $data['data'], $new_expires);
+    $data = $this->storage->get($storage_key);
+    $this->setLease($storage_key, $data['lease_id'], $data['data'], $new_expires);
   }
 
 }
