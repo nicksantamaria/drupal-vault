@@ -101,16 +101,30 @@ class VaultClient extends CachedClient {
    *  The storage key. Something like "key:key_machine_id".
    */
   public function revokeLease($storage_key) {
-    // @todo make revoke request. Something like this:
-//    try {
-//      // @todo for some reason these tokens aren't being revoked. Get to the bottom of it.
-//      $path = '/sys/leases/revoke';
-//      $response = $this->client->put($path, ["lease_id" => $lease['lease_id']]);
-//    } catch (Exception $e) {
-//      $this->logger->critical('Unable to revoke lease on secret ' . $key->id());
-//    }
-    //$this->revoke()
+    $this->logger->debug(sprintf("attempting to revoke lease for %s", $storage_key));
+    $lease_id = $this->leaseStorage->getLeaseId($storage_key);
+    if (empty($lease_id)) {
+      $this->logger->error(sprintf("could not find lease for %s", $storage_key));
+      return TRUE;
+    }
+
+    try {
+      $data["lease_id"] = $lease_id;
+      $response = $this->put($this->buildPath("/sys/leases/revoke"), ['json' => $data]);
+
+      if (is_null($response->getRequestId())) {
+        throw new ClientException("null response from server revoking lease for " . $storage_key);
+      }
+    }
+    catch (\Exception $e) {
+      $this->logger->error(sprintf("Failed revoking lease %s", $lease_id));
+      $this->leaseStorage->deleteLease($lease_id);
+      return FALSE;
+    }
+
     $this->leaseStorage->deleteLease($lease_id);
+    return TRUE;
+
   }
 
   /**
