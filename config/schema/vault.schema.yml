@@ -12,3 +12,6 @@ vault.settings:
     lease_ttl_increment:
       type: string
       label: "Lease TTL Increment"
+    lease_renew_cron:
+      type: boolean
+      label: "Renew Lease via hook_cron"
