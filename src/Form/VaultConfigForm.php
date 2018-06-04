@@ -56,7 +56,12 @@ class VaultConfigForm extends ConfigFormBase {
     ];
 
     // Load authentication strategy plugins and add their options to the form.
-    $form['plugin_auth_settings']['#tree'] = TRUE;
+    $form['plugin_auth_settings'] = [
+      '#tree' => TRUE,
+      '#type' => 'fieldset',
+      '#title' => 'Authentication Plugin Settings',
+    ];
+
     $type = \Drupal::service('plugin.manager.vault_auth');
     $plugin_definitions = $type->getDefinitions();
     foreach ($plugin_definitions as $id => $info) {
