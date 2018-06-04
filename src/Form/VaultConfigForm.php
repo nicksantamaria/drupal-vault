@@ -37,7 +37,11 @@ class VaultConfigForm extends ConfigFormBase {
     $form['base_url'] = [
       '#type' => 'url',
       '#title' => t('Vault Server URL'),
-      '#description' => t('Base URL of the vault server'),
+      // MITM attacks being referenced: an attacker could compromise the Drupal
+      // UI, reconfiguring this module to route all requests to a proxy under
+      // their control. They could then steal any credentials passed over the
+      // wire.
+      '#description' => t('Base URL of the vault server. You may consider hard-coding this value in settings.php to mitigate risk of MITM attacks.'),
       '#default_value' => $config->get('base_url'),
       '#required' => TRUE,
     ];
