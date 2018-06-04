@@ -9,3 +9,6 @@ vault.settings:
     plugin_auth:
       type: string
       label: 'Authentication Plugin'
+    lease_ttl_increment:
+      type: string
+      label: "Lease TTL Increment"

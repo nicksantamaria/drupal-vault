@@ -42,6 +42,15 @@ class VaultConfigForm extends ConfigFormBase {
       '#required' => TRUE,
     ];
 
+    $form['lease_ttl_increment'] = [
+      '#type' => 'textfield',
+      '#title' => t('Lease TTL Increment'),
+      '#description' => t('Time (in seconds) that we request leases be extended for. Vault has to adhere to its own policy restrictions, the actual lease increment value may be lower. This number will depend on how frequenty cron is being run.'),
+      '#default_value' => $config->get('lease_ttl_increment'),
+      '#required' => TRUE,
+      '#size' => 16,
+    ];
+
     $form['plugin_auth'] = [
       '#type' => 'select',
       '#title' => t('Authentication Strategy'),
