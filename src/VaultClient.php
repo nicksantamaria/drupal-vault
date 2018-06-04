@@ -4,7 +4,6 @@ namespace Drupal\vault;
 
 use Vault\CachedClient;
 use Vault\Exceptions\ClientException;
-use Drupal\Component\Serialization\Json;
 
 /**
  * Wrapper for \Vault\Client providing some helper methods.
@@ -17,14 +16,19 @@ class VaultClient extends CachedClient {
   public const API = 'v1';
 
   /**
+   * The lease storage object.
+   *
    * @var \Drupal\Vault\VaultLeaseStorage
    */
   protected $leaseStorage;
 
   /**
-   * @param $leaseManager \Drupal\Vault\VaultLeaseStorage
+   * Sets the leaseStorage property.
+   *
+   * @param \Drupal\Vault\VaultLeaseStorage $leaseStorage
+   *   The lease storage object.
    */
-  public function setLeaseStorage($leaseStorage) {
+  public function setLeaseStorage(VaultLeaseStorage $leaseStorage) {
     $this->leaseStorage = $leaseStorage;
   }
 
@@ -74,14 +78,14 @@ class VaultClient extends CachedClient {
   /**
    * Stores a lease.
    *
-   * @param $storage_key string
-   *  The storage key. Something like "key:key_machine_id".
-   * @param $lease_id string
-   *  The lease ID.
-   * @param $data
-   *  The lease data.
-   * @param $expires
-   *  The lease expiry.
+   * @param string $storage_key
+   *   The storage key. Something like "key:key_machine_id".
+   * @param string $lease_id
+   *   The lease ID.
+   * @param mixed $data
+   *   The lease data.
+   * @param int $expires
+   *   The lease expiry (relative to current time in seconds).
    */
   public function storeLease($storage_key, $lease_id, $data, $expires) {
     $this->leaseStorage->setLease($storage_key, $lease_id, $data, $expires);
@@ -97,8 +101,8 @@ class VaultClient extends CachedClient {
   /**
    * Revokes a lease.
    *
-   * @param $storage_key string
-   *  The storage key. Something like "key:key_machine_id".
+   * @param string $storage_key
+   *   The storage key. Something like "key:key_machine_id".
    */
   public function revokeLease($storage_key) {
     $this->logger->debug(sprintf("attempting to revoke lease for %s", $storage_key));
@@ -130,13 +134,13 @@ class VaultClient extends CachedClient {
   /**
    * Renews a lease.
    *
-   * @param $storage_key string
-   *  The storage key. Something like "key:key_machine_id".
+   * @param string $storage_key
+   *   The storage key. Something like "key:key_machine_id".
    * @param int $increment
-   *  The number of seconds to extend the release by.
+   *   The number of seconds to extend the release by.
    *
    * @return bool
-   *  TRUE if successful, FALSE if failed.
+   *   TRUE if successful, FALSE if failed.
    */
   public function renewLease($storage_key, $increment) {
     $this->logger->debug(sprintf("attempting to renew lease for %s", $storage_key));
@@ -148,7 +152,7 @@ class VaultClient extends CachedClient {
 
       $data = [
         "lease_id" => $lease_id,
-        "increment" => $increment
+        "increment" => $increment,
       ];
       $response = $this->put($this->buildPath("/sys/leases/renew"), ['json' => $data]);
       if (is_null($response->getRequestId())) {
@@ -169,9 +173,9 @@ class VaultClient extends CachedClient {
   /**
    * Helper method to renew all existing leases.
    *
-   * @param $increment int
-   *  Additional length to request leases for. Should be _at least_ the number
-   *  of seconds between cron runs.
+   * @param int $increment
+   *   Additional length to request leases for. Should be _at least_ the number
+   *   of seconds between cron runs.
    */
   public function renewAllLeases($increment) {
     $leases = $this->leaseStorage->getAllLeases();
