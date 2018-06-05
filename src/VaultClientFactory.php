@@ -5,6 +5,7 @@ namespace Drupal\vault;
 use Drupal\Core\Config\ConfigFactory;
 use VaultTransports\Guzzle6Transport;
 use Vault\Exceptions\AuthenticationException;
+use Cache\Adapter\PHPArray\ArrayCachePool;
 
 /**
  * Factory class for Vault client.
@@ -29,6 +30,9 @@ class VaultClientFactory {
     $transport = new Guzzle6Transport(['base_url' => $settings->get('base_url')]);
     $logger = \Drupal::service('logger.channel.vault');
     $client = new VaultClient($transport, $logger);
+    $client->enableReadCache();
+    $client->setCache(new ArrayCachePool());
+    $client->setLeaseStorage(new VaultLeaseStorage());
 
     // Load up auth strategy.
     try {
@@ -38,9 +42,8 @@ class VaultClientFactory {
         throw new AuthenticationException("Failed to authenticate");
       }
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       $logger->error(sprintf("[%s] %s", get_class($e), $e->getMessage()));
-      throw $e;
     }
 
     return $client;
