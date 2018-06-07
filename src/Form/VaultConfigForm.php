@@ -80,6 +80,7 @@ class VaultConfigForm extends ConfigFormBase {
           }
         }
         $form['plugin_auth_settings'][$id] = $plugin->buildConfigurationForm($form['plugin_auth_settings'][$id], $subform_state);
+        $form['plugin_auth_settings'][$id]['#states']['visible'][':input[name="plugin_auth"]']['value'] = ['value' => $id];
       }
     }
 
