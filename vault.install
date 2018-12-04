@@ -45,6 +45,9 @@ function vault_requirements($phase) {
 
     try {
       $client = \Drupal::service('vault.vault_client');
+      if (!$client->getToken()) {
+        throw new Exception("Vault token not received");
+      }
       $requirements['vault-auth-ping']['severity'] = REQUIREMENT_OK;
       $requirements['vault-auth-ping']['value'] = "authentication provider able to authenticate";
     }
