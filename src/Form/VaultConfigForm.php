@@ -127,6 +127,7 @@ class VaultConfigForm extends ConfigFormBase {
     $config
       ->set('base_url', $form_state->getValue('base_url'))
       ->set('plugin_auth', $form_state->getValue('plugin_auth'))
+      ->set('lease_ttl_increment', $form_state->getValue('lease_ttl_increment'))
       ->save();
 
     $type = \Drupal::service('plugin.manager.vault_auth');
