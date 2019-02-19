@@ -27,7 +27,7 @@ class VaultClientFactory {
     $settings = $configFactory->get('vault.settings');
 
     // @todo move transports into plugins.
-    $transport = new Guzzle6Transport(['base_url' => $settings->get('base_url')]);
+    $transport = new Guzzle6Transport(['base_uri' => $settings->get('base_url')]);
     $logger = \Drupal::service('logger.channel.vault');
     $client = new VaultClient($transport, $logger);
     $client->enableReadCache();
